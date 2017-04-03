@@ -1,2 +1,2 @@
 # FB-Graph-Search-App
-A one page responsive app
+A single page responsive app
