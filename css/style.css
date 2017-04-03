@@ -1,0 +1,28 @@
+.active {
+    background-color: #0d47a1;
+    color: white ;
+    border-color: #0d47a1 !important;
+    border-radius:0;
+}
+
+.nav-tabs>li>a:hover, .nav>li>a:focus, .nav>li>a:hover {
+    border-color: #0d47a1 !important;
+    background-color: #0d47a1 !important;
+    color: white;
+}
+
+.nav-tabs.nav-justified {
+    border-bottom: 2px solid #0d47a1;
+}
+
+.btn-primary {
+    background: white;
+    color: #0d47a1;
+    border-radius:0;
+}
+
+
+.nav-tabs.nav-justified > li > a {
+    border-radius: 0;
+    border-bottom: none;
+}

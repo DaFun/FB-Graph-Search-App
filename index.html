@@ -1,40 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <title>FB Graph Search App</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js">
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <script src="//unpkg.com/angular@1.5/angular.js"></script>
+    <script src="//unpkg.com/angular-ui-router@1.0.0-beta.3/release/angular-ui-router.js"></script>
+    <script src="js/navi.js"></script>
+    <script src="js/components/user.js"></script>
+    <script src="js/components/pages.js"></script>
+    <script src="js/components/event.js"></script>
+    <script src="js/components/place.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 <div class="container-fluid">
-    <div class="row" style="background-color: WhiteSmoke">
-        <div class="col-xs-12 col-md-3">
+    <div class="row" style="background-color: WhiteSmoke;">
+        <div class="col-xs-12 col-md-3" style="margin: 8px auto;">
             <button type="button" class="btn btn-link">FB Search</button>
         </div>
-        <div class="col-xs-8 col-md-6">
+        <div class="col-xs-8 col-md-6" style="margin: 8px auto;">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="type something...">
                 <span class="input-group-btn">
-            <button class="btn btn-primary" type="button">&nbsp<span class="glyphicon glyphicon-search"></span>&nbsp</button>
+            <button class="btn active" type="button">&nbsp<span class="glyphicon glyphicon-search"></span>&nbsp</button>
           </span>
             </div><!-- /input-group -->
         </div>
-        <div class="col-xs-4 col-md-3">
-            <button class="btn btn-default" type="submit">Clear</button>
+        <div class="col-xs-4 col-md-3" style="margin: 8px auto;">
+            <button class="btn btn-primary" type="submit">Clear</button>
         </div>
-    </div><!-- /.row -->
 
-    <ul class="nav nav-tabs nav-justified">
-        <li role="presentation" class="active"><a href="#">Home</a></li>
-        <li role="presentation"><a href="#">Profile</a></li>
-        <li role="presentation"><a href="#">Messages</a></li>
-    </ul>
+    </div>
+    <div ng-app="hello">
+        <ul class="nav nav-tabs nav-justified">
+            <li role="presentation"><a ui-sref="user" ui-sref-active="active">Users</a></li>
+            <li role="presentation"><a ui-sref="pages" ui-sref-active="active">Pages</a></li>
+            <li role="presentation"><a ui-sref="event" ui-sref-active="active">Events</a></li>
+            <li role="presentation"><a ui-sref="place" ui-sref-active="active">Places</a></li>
+            <li role="presentation"><a ui-sref="group" ui-sref-active="active">Groups</a></li>
+            <li role="presentation"><a ui-sref="favorite" ui-sref-active="active">Favorites</a></li>
+        </ul>
+        <ui-view></ui-view>
+    </div>
+
 
 </body>
 </html>
