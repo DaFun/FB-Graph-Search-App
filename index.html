@@ -8,48 +8,168 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
 
-    <script src="//unpkg.com/angular@1.5/angular.js"></script>
-    <script src="//unpkg.com/angular-ui-router@1.0.0-beta.3/release/angular-ui-router.js"></script>
-    <script src="js/navi.js"></script>
-    <script src="js/components/user.js"></script>
-    <script src="js/components/pages.js"></script>
-    <script src="js/components/event.js"></script>
-    <script src="js/components/place.js"></script>
+    <script src="js/script.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-<div class="container-fluid">
-    <div class="row" style="background-color: WhiteSmoke;">
-        <div class="col-xs-12 col-md-3" style="margin: 8px auto;">
-            <button type="button" class="btn btn-link">FB Search</button>
-        </div>
-        <div class="col-xs-8 col-md-6" style="margin: 8px auto;">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="type something...">
-                <span class="input-group-btn">
-            <button class="btn active" type="button">&nbsp<span class="glyphicon glyphicon-search"></span>&nbsp</button>
-          </span>
-            </div><!-- /input-group -->
-        </div>
-        <div class="col-xs-4 col-md-3" style="margin: 8px auto;">
-            <button class="btn btn-primary" type="submit">Clear</button>
+<body ng-app="navi">
+    <div class="container-fluid" ng-controller="searchCtrl">
+        <!--search bar-->
+        <div class="row" style="background-color: WhiteSmoke;">
+            <div class="col-xs-12 col-md-3" style="margin: 8px auto;">
+                <button type="button" class="btn btn-link">FB Search</button>
+            </div>
+            <div class="col-xs-8 col-md-6" style="margin: 8px auto;">
+                <form class="input-group">
+                    <input required ng-model="keyword" type="text" class="form-control" placeholder="type something...">
+                    <span class="input-group-btn">
+                        <button ng-click="myFunc()" class="btn active" type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                </form><!-- /input-group -->
+            </div>
+            <div class="col-xs-4 col-md-3" style="margin: 8px auto;">
+                <button class="btn btn-primary" type="submit">Clear</button>
+            </div>
         </div>
 
+        <!--Nav-->
+        <div>
+            <ul class="nav nav-tabs nav-justified">
+                <li role="presentation"><a id="user" ng-click="setActive('user')">Users</a></li>
+                <li role="presentation"><a id="page" ng-click="setActive('page')">Pages</a></li>
+                <li role="presentation"><a id="event" ng-click="setActive('event')">Events</a></li>
+                <li role="presentation"><a id="place" ng-click="setActive('place')">Places</a></li>
+                <li role="presentation"><a id="group" ng-click="setActive('group')">Groups</a></li>
+                <li role="presentation"><a id="favorite" ng-click="setActive('favorite')">Favorites</a></li>
+            </ul>
+            <div id="view"></div>
+            <div ng-switch="article" ng-animate="'animate'">
+                <div id="ngtable" ng-switch-when="1">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead ng-if="currentview">
+                            <tr>
+                                <th class="col-md-p5">#</th>
+                                <th class="col-md-2p">Profile photo</th>
+                                <th class="col-md-5p5">Name</th>
+                                <th class="col-md-1p5">Favarite</th>
+                                <th class="col-md-1p5">Details</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="i in currentview.data">
+                                <th scope="row" style="vertical-align:middle">{{$index + 1}}</th>
+                                <td style="vertical-align:middle">
+                                    <img src="{{i.picture.data.url}}" class="img-circle" alt="Responsive image" width="50" height="50">
+                                </td>
+                                <td style="vertical-align:middle">{{i.name}}</td>
+                                <td style="vertical-align:middle" >
+                                    <button class="btn btn-default" ng-click='clickStorage(i)' id="{{i.id}}">
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    </button>
+                                </td>
+                                <td style="vertical-align:middle">
+                                    <button class="btn btn-default" ng-click="clickDetail(i.id)">
+                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-if="currentview" style="margin: 10px auto">
+                        <div ng-if="currentview.paging.hasOwnProperty('previous')">
+                            <div class="col-sm-offset-5 col-sm-1">
+                                <button ng-click="myPre(currentview.paging.previous)" class="btn btn-default" type="submit">Previous</button>
+                            </div>
+                            <div style="margin: 20px">
+                                <button ng-click="myNext(currentview.paging.next)" class="btn btn-default" type="submit" style="margin: 0 20px">Next</button>
+                            </div>
+                        </div>
+                        <div ng-if="!page.hasOwnProperty('previous')">
+                            <div class="col-sm-offset-5 col-sm-1"></div><div style="margin: 20px">
+                            <button ng-click="myNext(currentview.paging.next)" class="btn btn-default" type="submit" style="margin: 0 20px">Next</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="detail" ng-switch-when="2">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <td class="col-xs-11">
+                                    <button class="btn btn-default" ng-click="article=1">
+                                        <span class="glyphicon glyphicon-chevron-right">Back</span>
+                                    </button>
+                                </td>
+                                <td class="col-xs-1">
+                                    <button class="btn btn-default" ng-click='clickStorage(i)' style="margin: auto 20px;">
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    </button>
+                                    <button class="btn btn-default" ng-click='clickFB()'>
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr style="background-color: WhiteSmoke;">
+                                        <th class="col-md-6">Albums</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="i in currentDetail">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr style="background-color: WhiteSmoke;">
+                                                    <th class="col-md-6" ng-click="show[$index]=!show[$index]">Albums</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="col-md-6"  ng-show="show[$index]">
+                                                        <img src="{{i.picture.data.url}}" class="square" width="50" height="50">
+                                                    </td>
+                                                    <td class="col-md-6" ng-show="show[$index]">
+                                                        <img src="{{i.picture.data.url}}" class="square" width="50" height="50">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr style="background-color: WhiteSmoke;">
+                                        <th class="col-md-6">Posts</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="i in currentDetail">
+                                        <div>
+                                            <td class="col-md-6">1,001</td>
+                                        </div>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div ng-app="hello">
-        <ul class="nav nav-tabs nav-justified">
-            <li role="presentation"><a ui-sref="user" ui-sref-active="active">Users</a></li>
-            <li role="presentation"><a ui-sref="pages" ui-sref-active="active">Pages</a></li>
-            <li role="presentation"><a ui-sref="event" ui-sref-active="active">Events</a></li>
-            <li role="presentation"><a ui-sref="place" ui-sref-active="active">Places</a></li>
-            <li role="presentation"><a ui-sref="group" ui-sref-active="active">Groups</a></li>
-            <li role="presentation"><a ui-sref="favorite" ui-sref-active="active">Favorites</a></li>
-        </ul>
-        <ui-view></ui-view>
-    </div>
-
-
 </body>
 </html>

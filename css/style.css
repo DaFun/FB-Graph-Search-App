@@ -1,28 +1,64 @@
 .active {
-    background-color: #0d47a1;
+    background-color: #3b5998;
     color: white ;
-    border-color: #0d47a1 !important;
+    border-color: #3b5998 !important;
     border-radius:0;
 }
 
 .nav-tabs>li>a:hover, .nav>li>a:focus, .nav>li>a:hover {
-    border-color: #0d47a1 !important;
-    background-color: #0d47a1 !important;
+    border-color: #3b5998 !important;
+    background-color: #3b5998 !important;
     color: white;
 }
 
 .nav-tabs.nav-justified {
-    border-bottom: 2px solid #0d47a1;
+    border-bottom: 2px solid #3b5998;
 }
 
 .btn-primary {
     background: white;
-    color: #0d47a1;
+    color: #3b5998;
     border-radius:0;
 }
-
 
 .nav-tabs.nav-justified > li > a {
     border-radius: 0;
     border-bottom: none;
+}
+
+.col-md-1p5 {width: 12.5%;}
+.col-md-p5 {width: 7%;}
+.col-md-5p5 {width: 50%;}
+.col-md-2p {width: 18%;}
+
+.table>thead>tr>td, .table>thead>tr>th {
+    margin: 10px;
+}
+
+.add-star {
+    color: yellow;
+}
+
+.animate-enter,
+.animate-leave
+{
+    -webkit-transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+}
+
+.animate-enter {
+    left: 100%;
+}
+.animate-enter.animate-enter-active {
+    left: 0;
+}
+
+.animate-leave {
+    left: 0;
+}
+.animate-leave.animate-leave-active{
+    left: -100%;
 }

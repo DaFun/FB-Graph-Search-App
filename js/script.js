@@ -36,6 +36,7 @@ angular.module('navi', [])
         $scope.place = '';
         $scope.event = '';
         $scope.group = '';
+        $scope.article = 1;
 
         $scope.active = 'user';
         setActiveTab($scope.active);
@@ -123,6 +124,35 @@ angular.module('navi', [])
                         $scope.setActive($scope.active);
                 });
             }
+        }
+
+        $scope.myNext = function(link) {
+            $http({
+                url: 'http://cs-server.usc.edu:10695/server.php',
+                params: {'link': link},
+                method: 'GET'}).then(function success(response) {
+                    currentview = response;
+                    console.log("next");
+                    //console.log(response);
+                    //$scope.setActive($scope.active);
+                });
+        }
+
+        $scope.myPre = function(link) {
+            $http({
+                url: 'http://cs-server.usc.edu:10695/server.php',
+                params: {'link': link},
+                method: 'GET'}).then(function success(response) {
+                    currentview = response;
+                    console.log("pre");
+                    //console.log(response);
+                    //$scope.setActive($scope.active);
+                });
+        }
+
+        $scope.clickDetail = function(id) {
+            $scope.article = 2;
+
         }
 
         $scope.myFunc = function () {
