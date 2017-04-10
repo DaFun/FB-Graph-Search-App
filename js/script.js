@@ -92,10 +92,10 @@ angular.module('navi', [])
         $scope.clickStorage = function(data) {
             if (data.id in localStorage) {
                 localStorage.removeItem(data.id);
-                $('#'+data.id).html('<span class="glyphicon glyphicon-star-empty"></span>');
+                $scope.star = false;
             } else {
                 localStorage.setItem(data.id, data);
-                $('#'+data.id).html('<span class="glyphicon glyphicon-star add-star"></span>');
+                $scope.star = true;
             }
         }
 
@@ -117,11 +117,11 @@ angular.module('navi', [])
                     url: 'http://cs-server.usc.edu:10695/server.php',
                     params: {'type': 'place', 'q': keyword, 'lat': crd.latitude, 'lon': crd.longitude},
                     method: 'GET'}).then(function success(response) {
-                        $scope.place = response.data;
-                        console.log(response);
-                        $('#view').empty();
-                        //$scope.currentview = response;
-                        $scope.setActive($scope.active);
+                    $scope.place = response.data;
+                    console.log(response);
+                    $('#view').empty();
+                    //$scope.currentview = response;
+                    $scope.setActive($scope.active);
                 });
             }
         }
@@ -131,11 +131,11 @@ angular.module('navi', [])
                 url: 'http://cs-server.usc.edu:10695/server.php',
                 params: {'link': link},
                 method: 'GET'}).then(function success(response) {
-                    currentview = response;
-                    console.log("next");
-                    //console.log(response);
-                    //$scope.setActive($scope.active);
-                });
+                currentview = response;
+                console.log("next");
+                //console.log(response);
+                //$scope.setActive($scope.active);
+            });
         }
 
         $scope.myPre = function(link) {
@@ -143,16 +143,31 @@ angular.module('navi', [])
                 url: 'http://cs-server.usc.edu:10695/server.php',
                 params: {'link': link},
                 method: 'GET'}).then(function success(response) {
-                    currentview = response;
-                    console.log("pre");
-                    //console.log(response);
-                    //$scope.setActive($scope.active);
-                });
+                currentview = response;
+                console.log("pre");
+                //console.log(response);
+                //$scope.setActive($scope.active);
+            });
         }
 
-        $scope.clickDetail = function(id) {
+        $scope.clickDetail = function(id, data) {
             $scope.article = 2;
-
+            //$scope.currentId = id;
+            $http({
+                url: 'http://cs-server.usc.edu:10695/server.php',
+                params: {'id': id},
+                method: 'GET'}).then(function success(response) {
+                currentDetail = response;
+                console.log("detail");
+            });
+            $scope.currentData = data;
+            if (id in localStorage) {
+                $scope.star = false;
+                //$('#'+id).html('<span class="glyphicon glyphicon-star-empty"></span>');
+            } else {
+                $scope.star = true;
+                //$('#'+data.id).html('<span class="glyphicon glyphicon-star add-star"></span>');
+            }
         }
 
         $scope.myFunc = function () {
@@ -161,18 +176,15 @@ angular.module('navi', [])
             $('#view').html(bar);
 
             if ($scope.keyword) {
+                $scope.fetchPlace($scope.keyword);
                 fetchUser($scope.keyword);
                 fetchPage($scope.keyword);
                 fetchEvent($scope.keyword);
                 fetchGroup($scope.keyword);
-                $scope.fetchPlace($scope.keyword);
-            }
-            //$scope.setActive($scope.active);
 
+            }
 
             function fetchUser(keyword) {
-                var data = '';
-                var page = '';
                 $.ajax({
                     url: 'http://cs-server.usc.edu:10695/server.php',
                     data: {'type': 'user', 'q': keyword},
@@ -189,8 +201,6 @@ angular.module('navi', [])
             }
 
             function fetchPage(keyword) {
-                var data = '';
-                var page = '';
                 $.ajax({
                     url: 'http://cs-server.usc.edu:10695/server.php',
                     data: {'type': 'page', 'q': keyword},
@@ -198,7 +208,6 @@ angular.module('navi', [])
                     dataType: 'json',
                     crossDomain: true,
                     success: function(response, status, xhr) {
-
                         $scope.page = response;
                     },
                     error: function(xhr, status, error) {
@@ -209,8 +218,6 @@ angular.module('navi', [])
 
 
             function fetchEvent(keyword) {
-                var data = '';
-                var page = '';
                 $.ajax({
                     url: 'http://cs-server.usc.edu:10695/server.php',
                     data: {'type': 'event', 'q': keyword},
@@ -218,8 +225,6 @@ angular.module('navi', [])
                     dataType: 'json',
                     crossDomain: true,
                     success: function(response, status, xhr) {
-                        //console.log(response);
-
                         $scope.event = response;
                     },
                     error: function(xhr, status, error) {
@@ -229,8 +234,6 @@ angular.module('navi', [])
             }
 
             function fetchGroup(keyword) {
-                var data = '';
-                var page = '';
                 $.ajax({
                     url: 'http://cs-server.usc.edu:10695/server.php',
                     data: {'type': 'group', 'q': keyword},
@@ -249,8 +252,6 @@ angular.module('navi', [])
             }
         }
     });
-
-
 
 
 function setActiveTab(tab) {
