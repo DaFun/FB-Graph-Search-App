@@ -57,7 +57,7 @@
 
 
   if (isset($_GET['id'])) {
-    $fields = 'albums.limit(5){name,photos.limit(2){name,picture}},posts.limit(5){created_time}';
+    $fields = 'name,albums.limit(5){name,photos.limit(2){name,picture}},posts.limit(5)';
     $request = 'https://graph.facebook.com/v2.8/'.$_GET['id'].'?fields='.$fields.'&access_token='.$access_token;
     $response = file_get_contents($request);
     echo $response;

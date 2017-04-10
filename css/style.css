@@ -62,3 +62,10 @@
 .animate-leave.animate-leave-active{
     left: -100%;
 }
+
+.no-data {
+    background-color: darkkhaki;
+    margin: 20px auto;
+    padding: 10px auto;
+    color: chocolate;
+}
