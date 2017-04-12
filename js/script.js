@@ -111,14 +111,11 @@ angular.module('navi', [])
             function getLatLon(position) {
                 var crd = position.coords;
                 $http({
-                    //dataType: 'json',
-                    //async: false,
-                    //crossDomain: true,
                     url: 'http://cs-server.usc.edu:10695/server.php',
                     params: {'type': 'place', 'q': keyword, 'lat': crd.latitude, 'lon': crd.longitude},
                     method: 'GET'}).then(function success(response) {
                     $scope.place = response.data;
-                    console.log(response);
+                    //console.log(response);
                     $('#view').empty();
                     //$scope.currentview = response;
                     $scope.setActive($scope.active);
@@ -150,15 +147,30 @@ angular.module('navi', [])
             });
         }
 
+        $scope.show = new Array(5);
+        $scope.show[0] = true;
+        for (var i = 1; i < $scope.show.length; ++i) { $scope.show[i] = false; }
+
+        $scope.getTime = function(time) {
+            return time.substring(0,10) + ' ' + time.substring(11,19);
+        }
+
+        $scope.setDetail = function(response) {
+            $scope.showTable = true;
+            $scope.currentDetail = response;
+        }
+
         $scope.clickDetail = function(id, data) {
             $scope.article = 2;
+            $scope.showTable = false;
             //$scope.currentId = id;
             $http({
                 url: 'http://cs-server.usc.edu:10695/server.php',
                 params: {'id': id},
                 method: 'GET'}).then(function success(response) {
-                currentDetail = response;
-                console.log("detail");
+                $scope.setDetail(response.data);
+                console.log($scope.currentDetail);
+                console.log($scope.showTable);
             });
             $scope.currentData = data;
             if (id in localStorage) {
@@ -168,6 +180,14 @@ angular.module('navi', [])
                 $scope.star = true;
                 //$('#'+data.id).html('<span class="glyphicon glyphicon-star add-star"></span>');
             }
+        }
+
+        $scope.goBack = function() {
+            $scope.article = 1;
+            $scope.currentDetail = null;
+            $scope.showTable = false;
+            $scope.show[0] = true;
+            for (var i = 1; i < $scope.show.length; ++i) { $scope.show[i] = false; }
         }
 
         $scope.myFunc = function () {
