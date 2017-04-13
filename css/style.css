@@ -45,10 +45,44 @@
     padding: 20px;
 }
 
+.btn.focus, .btn:focus, .btn:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.btn-primary.focus, .btn-primary:focus {
+    color: #3b5998;
+    background-color: white;
+    border-color: #122b40;
+}
+
+.btn-primary:hover {
+    color: white;
+    background-color: #3b5998;
+    border-color: #204d74;
+}
+
+.btn-default:active:hover, .btn-default:focus {
+    background-color: white;
+}
+
+.btn:focus {
+    color: black;
+}
+
+.nav>li>a:focus, .nav-tabs>li>a:hover,  .nav>li>a:hover {
+    border-color: #3b5998 !important;
+    background-color: #3b5998 !important;
+    color: white;
+}
+
 .col-md-1p5 {width: 12.5%;}
 .col-md-p5 {width: 7%;}
 .col-md-5p5 {width: 50%;}
+.col-md-4p {width: 40%;}
+.col-md-1p {width: 10%;}
 .col-md-2p {width: 18%;}
+.col-md-p3 {width: 4%;}
 
 .table>thead>tr>td, .table>thead>tr>th {
     margin: 10px;
@@ -58,34 +92,27 @@
     color: yellow;
 }
 
-.animate-enter,
-.animate-leave
-{
-    -webkit-transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-    -moz-transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-    -ms-transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-    -o-transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
-    transition: 1s cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+.animate-switch-container {
+    position:relative;
+    overflow:hidden;
 }
 
-.animate-enter {
-    left: 100%;
-}
-.animate-enter.animate-enter-active {
-    left: 0;
+
+.animate-switch.ng-enter {
+    -webkit-animation: slideInLeft 0.5s;
+    -moz-animation: slideInLeft 0.5s;
+    -ms-animation: slideInLeft 0.5s;
+    animation: slideInLeft 0.5s;
 }
 
-.animate-leave {
-    left: 0;
+
+.my-switch.ng-enter {
+    -webkit-animation: slideInRight 1s;
+    -moz-animation: slideInRight 1s;
+    -ms-animation: slideInRight 1s;
+    animation: slideInRight 1s;
 }
 
-.animate-leave.animate-leave-active{
-    left: -100%;
-}
-
-.switch {
-    position: relative;
-}
 
 .no-data {
     background-color: lightgoldenrodyellow;

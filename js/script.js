@@ -1,35 +1,8 @@
 /**
  * Created by Ban on 4/3/2017.
  */
-function getFavorite() {
-    var result = '<div class="table-responsive"><table class="table"><thead><tr><th class="col-md-p5">#</th>' +
-        '<th class="col-md-2p">Profile photo</th><th class="col-md-5p5">Name</th>' +
-        '<th class="col-md-1p5">Favarite</th><th class="col-md-1p5">Details</th></tr></thead><tbody>';
-    var index = 1;
-    if (window.localStorage.length === 0) {
-        return '';
-    }
-    for (var i in window.localStorage){
-        var data = localStorage.getItem(i);
-        var value = data.split("^");
-        var name = value[0];
-        var url = value[1];
-        result += '<tr><th scope="row" style="vertical-align:middle">' + index + '</th><td style="vertical-align:middle">';
-        result += '<img src="' + url + '" class="img-circle" alt="Responsive image" width="50" height="50">';
-        result += '</td><td style="vertical-align:middle">' + name + '</td><td style="vertical-align:middle">';
-        result += '<button class="btn btn-default" ng-click="clickDelete(' + i + ')"><span class="glyphicon glyphicon-trash"></span></button>';
-        result += '</td><td style="vertical-align:middle">';
-        result += '<button class="btn btn-default" ng-click="clickDetail(' + i + ')"><span class="glyphicon glyphicon-chevron-right"></span></button>';
-        result += '</td></tr>';
-        index++;
-    }
-    result += '</tbody></table></div>';
-    return result;
-}
 
-var favorite_global = getFavorite();
-
-angular.module('navi', [])
+angular.module('navi', ['ngAnimate'])
     .controller('searchCtrl', function($scope, $http) {
         $scope.user = '';
         $scope.page = '';
@@ -38,66 +11,139 @@ angular.module('navi', [])
         $scope.group = '';
         $scope.article = 1;
 
-        $scope.active = 'user';
+        $scope.active = 'users';
         setActiveTab($scope.active);
-        $scope.clickStorage = function(data) {
-            var info = data.split('^');
-            var id = info[2];
+
+        localStorage.clear();
+        $scope.clickStorage = function(data, index, type) {
+            var id = data.id;
+            console.log(data);
+            var obj = { type: type, data: data };
             if (localStorage.getItem(id) === null) {
-                localStorage.setItem(id, data);
-                $('#'+id).addClass('like');
+                localStorage.setItem(id, JSON.stringify(obj));
+                $scope.star[index] = true;
             } else {
                 localStorage.removeItem(id);
-                $('#'+id).removeClass('like');
+                $scope.star[index] = false;
             }
         }
 
+        $scope.storage = function(data, type) {
+            var id = data.id;
+            //console.log(data);
+            if (localStorage.getItem(id) === null) {
+                localStorage.setItem(id, JSON.stringify({type: type, data: data}));
+                $scope.starS = true;
+            } else {
+                localStorage.removeItem(id);
+                $scope.starS = false;
+            }
+        }
+
+        $scope.getFavorite = function() {
+            var result = [];
+            for (var i in localStorage) {
+                var record = JSON.parse(localStorage.getItem(i));
+                if (record) {
+                    result.push(record);
+                }
+            }
+            return result;
+        }
+
+        $scope.star = new Array(25);
+
+        $scope.getAllStar = function() {
+            if ($scope.currentview) {
+                for (var i = 0; i < $scope.currentview.data.length; ++i) {
+                    if (localStorage.getItem($scope.currentview.data[i].id) === null) {
+                        $scope.star[i] = false;
+                    } else {
+                        $scope.star[i] = true;
+                    }
+                }
+            }
+        }
+
+        $scope.clickFB = function(data) {
+            FB.ui({
+                app_id: '260269694418755',
+                method: 'feed',
+                link: window.location.href,
+                picture: data.picture.data.url,
+                name: data.name,
+                caption: 'FB SEARCH FROM USC CSCI571',
+            }, function(response){
+                if (response && !response.error_message)
+                    alert('Posted Successfully');
+                else
+                    alert('Not Posted');
+            });
+        }
 
         $scope.setActive = function(tab) {
             unActiveTab($scope.active);
             $scope.active = tab;
             setActiveTab($scope.active);
             switch($scope.active) {
-                case 'user':
+                case 'users':
                     $scope.currentview = $scope.user;
+                    $scope.getAllStar();
+                    $scope.article = 1;
                     break;
-                case 'page':
-
+                case 'pages':
                     $scope.currentview = $scope.page;
+                    $scope.getAllStar();
+                    $scope.article = 1;
                     break;
-                case 'place':
-
+                case 'places':
                     $scope.currentview = $scope.place;
+                    $scope.getAllStar();
+                    $scope.article = 1;
                     break;
-                case 'event':
-
+                case 'events':
                     $scope.currentview = $scope.event;
+                    $scope.getAllStar();
+                    $scope.article = 1;
                     break;
-                case 'group':
-
+                case 'groups':
                     $scope.currentview = $scope.group;
+                    $scope.getAllStar();
+                    $scope.article = 1;
                     break;
                 default:
-                    $scope.currentview = favorite_global;
+                    $scope.currentFavorite = $scope.getFavorite();
+                    $scope.article = 1;
+            }
+        }
+
+        $scope.updateViews = function() {
+            switch($scope.active) {
+                case 'users':
+                    $scope.user = $scope.currentview;
+                    break;
+                case 'pages':
+                    $scope.page = $scope.currentview;
+                    break;
+                case 'places':
+                    $scope.place = $scope.currentview;
+                    break;
+                case 'events':
+                    $scope.event = $scope.currentview;
+                    break;
+                case 'groups':
+                    $scope.group = $scope.currentview;
+                    break;
+                default:
+                    $scope.currentFavorite = $scope.getFavorite();
             }
         }
 
         $scope.clickDelete = function(id) {
             localStorage.removeItem(id);
-            favorite_global = getFavorite();
-            $('#view').empty();
-            $('#view').html(favorite_global);
+            $scope.currentFavorite = $scope.getFavorite();
         }
 
-        $scope.clickStorage = function(data) {
-            if (data.id in localStorage) {
-                localStorage.removeItem(data.id);
-                $scope.star = false;
-            } else {
-                localStorage.setItem(data.id, data);
-                $scope.star = true;
-            }
-        }
 
         $scope.fetchPlace = function(keyword) {
             getLocation();
@@ -111,12 +157,13 @@ angular.module('navi', [])
             function getLatLon(position) {
                 var crd = position.coords;
                 $http({
-                    url: 'http://cs-server.usc.edu:10695/server.php',
+                    url: 'server.php',
                     params: {'type': 'place', 'q': keyword, 'lat': crd.latitude, 'lon': crd.longitude},
                     method: 'GET'}).then(function success(response) {
                     $scope.place = response.data;
-                    //console.log(response);
+                    console.log(response);
                     $('#view').empty();
+                    $('#view1').empty();
                     //$scope.currentview = response;
                     $scope.setActive($scope.active);
                 });
@@ -125,11 +172,12 @@ angular.module('navi', [])
 
         $scope.myNext = function(link) {
             $http({
-                url: 'http://cs-server.usc.edu:10695/server.php',
+                url: 'server.php',
                 params: {'link': link},
                 method: 'GET'}).then(function success(response) {
-                currentview = response;
+                $scope.currentview = response.data;
                 console.log("next");
+                $scope.updateViews();
                 //console.log(response);
                 //$scope.setActive($scope.active);
             });
@@ -137,11 +185,12 @@ angular.module('navi', [])
 
         $scope.myPre = function(link) {
             $http({
-                url: 'http://cs-server.usc.edu:10695/server.php',
+                url: 'server.php',
                 params: {'link': link},
                 method: 'GET'}).then(function success(response) {
-                currentview = response;
+                $scope.currentview = response.data;
                 console.log("pre");
+                $scope.updateViews();
                 //console.log(response);
                 //$scope.setActive($scope.active);
             });
@@ -160,29 +209,44 @@ angular.module('navi', [])
             $scope.currentDetail = response;
         }
 
+        $scope.getPhoto = function(id) {
+            return "https://graph.facebook.com/v2.8/"+id+"/picture?access_token=EAADstsKuf0MBAO67Hm3DRV5bUx34NzfZAcrSPXid0Eky1ZAMin7YoamWnusmRj7mxF7Ns3J8Au1qNL11iDQCx7Fp4RFZADbXskaszqwCTXwmMQoIpO74FlODxtKPviXbUxHxKMnaJts0wihu8XKoj1bxlgjQfkZD";
+        }
+
         $scope.clickDetail = function(id, data) {
-            $scope.article = 2;
             $scope.showTable = false;
+            $scope.article = 2;
             //$scope.currentId = id;
             $http({
-                url: 'http://cs-server.usc.edu:10695/server.php',
+                url: 'server.php',
                 params: {'id': id},
                 method: 'GET'}).then(function success(response) {
                 $scope.setDetail(response.data);
-                console.log($scope.currentDetail);
-                console.log($scope.showTable);
+                console.log(response);
+                //console.log($scope.showTable);
             });
             $scope.currentData = data;
             if (id in localStorage) {
-                $scope.star = false;
+                $scope.starS = true;
                 //$('#'+id).html('<span class="glyphicon glyphicon-star-empty"></span>');
             } else {
-                $scope.star = true;
+                $scope.starS = false;
                 //$('#'+data.id).html('<span class="glyphicon glyphicon-star add-star"></span>');
             }
         }
 
+        $scope.clearAll = function() {
+            $scope.currentview = null;
+            $scope.keyword = null;
+            $scope.user = null;
+            $scope.page = null;
+            $scope.place = null;
+            $scope.event = null;
+            $scope.group = null;
+        }
+
         $scope.goBack = function() {
+            $scope.getAllStar();
             $scope.article = 1;
             $scope.currentDetail = null;
             $scope.showTable = false;
@@ -191,22 +255,28 @@ angular.module('navi', [])
         }
 
         $scope.myFunc = function () {
-            var bar = '<div style="margin:150px "><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar"'+
+            var bar = '<div style="margin:100px "><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar"'+
                 'aria-valuenow="40" aria-valuemin="0" aria-valuemax="80" style="width:50%"></div></div></div>';
-            $('#view').html(bar);
+            $scope.currentview = null;
+            $scope.showBar = false;
 
             if ($scope.keyword) {
+                $scope.showBar = true;
+                $('#view').html(bar);
+                $('#view1').html(bar);
                 $scope.fetchPlace($scope.keyword);
                 fetchUser($scope.keyword);
                 fetchPage($scope.keyword);
                 fetchEvent($scope.keyword);
                 fetchGroup($scope.keyword);
 
+            } else {
+                alert('Keywords required');
             }
 
             function fetchUser(keyword) {
                 $.ajax({
-                    url: 'http://cs-server.usc.edu:10695/server.php',
+                    url: 'server.php',
                     data: {'type': 'user', 'q': keyword},
                     type: 'GET',
                     dataType: 'json',
@@ -222,7 +292,7 @@ angular.module('navi', [])
 
             function fetchPage(keyword) {
                 $.ajax({
-                    url: 'http://cs-server.usc.edu:10695/server.php',
+                    url: 'server.php',
                     data: {'type': 'page', 'q': keyword},
                     type: 'GET',
                     dataType: 'json',
@@ -239,7 +309,7 @@ angular.module('navi', [])
 
             function fetchEvent(keyword) {
                 $.ajax({
-                    url: 'http://cs-server.usc.edu:10695/server.php',
+                    url: 'server.php',
                     data: {'type': 'event', 'q': keyword},
                     type: 'GET',
                     dataType: 'json',
@@ -255,7 +325,7 @@ angular.module('navi', [])
 
             function fetchGroup(keyword) {
                 $.ajax({
-                    url: 'http://cs-server.usc.edu:10695/server.php',
+                    url: 'server.php',
                     data: {'type': 'group', 'q': keyword},
                     type: 'GET',
                     dataType: 'json',

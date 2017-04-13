@@ -15,37 +15,14 @@
     if ($_GET['type'] == 'place') {
       $loc = $_GET['lat'].','.$_GET['lon'];
       $fields = 'id,name,picture.width(700).height(700)';
-      $request = 'https://graph.facebook.com/v2.8/search?q='.$_GET['q'].'&type='.$_GET['type'].'&fields='.$fields.'&center='.$loc.'&access_token='.$access_token;
+      $request = 'https://graph.facebook.com/v2.8/search?q='.urlencode($_GET['q']).'&type='.$_GET['type'].'&fields='.$fields.'&center='.$loc.'&access_token='.$access_token;
       $response = file_get_contents($request);
       echo $response;
     } else {
       $fields = 'id,name,picture.width(700).height(700)';
-      $request = 'https://graph.facebook.com/v2.8/search?q='.$_GET['q'].'&type='.$_GET['type'].'&fields='.$fields.'&access_token='.$access_token;
+      $request = 'https://graph.facebook.com/v2.8/search?q='.urlencode($_GET['q']).'&type='.$_GET['type'].'&fields='.$fields.'&access_token='.$access_token;
       $response = file_get_contents($request);
       echo $response;
-      /*try {
-        $request = $fb->request (
-          'GET',
-          '/search',
-          array (
-            'type' => $_GET['type'],
-            'q' => $_GET['q'],
-            'fields' => 'id,name,picture.width(700).height(700)',
-          ),
-          $access_token,
-          null, null
-        );
-        $response = $fb->getClient()->sendRequest($request);
-
-        $graphObject = $response->getGraphEdge();
-        echo $graphObject->asJson();
-      } catch (Facebook\Exceptions\FacebookResponseException $ex) {
-        echo $ex->getMessage();
-        exit;
-      } catch (Facebook\Exceptions\FacebookSDKException $ex) {
-        echo $ex->getMessage();
-        exit;
-      }*/
     }
   }
 
