@@ -67,7 +67,7 @@ angular.module('navi', ['ngAnimate'])
 
         $scope.clickFB = function(data) {
             FB.ui({
-                app_id: '260269694418755',
+                app_id: '109790709575403',
                 method: 'feed',
                 link: window.location.href,
                 picture: data.picture.data.url,
@@ -157,7 +157,7 @@ angular.module('navi', ['ngAnimate'])
             function getLatLon(position) {
                 var crd = position.coords;
                 $http({
-                    url: 'server.php',
+                    url: 'http://sample-env.bcz3r45x9e.us-west-2.elasticbeanstalk.com/',
                     params: {'type': 'place', 'q': keyword, 'lat': crd.latitude, 'lon': crd.longitude},
                     method: 'GET'}).then(function success(response) {
                     $scope.place = response.data;
@@ -172,7 +172,7 @@ angular.module('navi', ['ngAnimate'])
 
         $scope.myNext = function(link) {
             $http({
-                url: 'server.php',
+                url: 'http://sample-env.bcz3r45x9e.us-west-2.elasticbeanstalk.com/',
                 params: {'link': link},
                 method: 'GET'}).then(function success(response) {
                 $scope.currentview = response.data;
@@ -185,7 +185,7 @@ angular.module('navi', ['ngAnimate'])
 
         $scope.myPre = function(link) {
             $http({
-                url: 'server.php',
+                url: 'http://sample-env.bcz3r45x9e.us-west-2.elasticbeanstalk.com/',
                 params: {'link': link},
                 method: 'GET'}).then(function success(response) {
                 $scope.currentview = response.data;
@@ -218,7 +218,7 @@ angular.module('navi', ['ngAnimate'])
             $scope.article = 2;
             //$scope.currentId = id;
             $http({
-                url: 'server.php',
+                url: 'http://sample-env.bcz3r45x9e.us-west-2.elasticbeanstalk.com/',
                 params: {'id': id},
                 method: 'GET'}).then(function success(response) {
                 $scope.setDetail(response.data);
@@ -276,7 +276,7 @@ angular.module('navi', ['ngAnimate'])
 
             function fetchUser(keyword) {
                 $.ajax({
-                    url: 'server.php',
+                    url: 'http://sample-env.bcz3r45x9e.us-west-2.elasticbeanstalk.com/',
                     data: {'type': 'user', 'q': keyword},
                     type: 'GET',
                     dataType: 'json',
@@ -292,7 +292,7 @@ angular.module('navi', ['ngAnimate'])
 
             function fetchPage(keyword) {
                 $.ajax({
-                    url: 'server.php',
+                    url: 'http://sample-env.bcz3r45x9e.us-west-2.elasticbeanstalk.com/',
                     data: {'type': 'page', 'q': keyword},
                     type: 'GET',
                     dataType: 'json',
@@ -309,7 +309,7 @@ angular.module('navi', ['ngAnimate'])
 
             function fetchEvent(keyword) {
                 $.ajax({
-                    url: 'server.php',
+                    url: 'http://sample-env.bcz3r45x9e.us-west-2.elasticbeanstalk.com/',
                     data: {'type': 'event', 'q': keyword},
                     type: 'GET',
                     dataType: 'json',
@@ -325,7 +325,7 @@ angular.module('navi', ['ngAnimate'])
 
             function fetchGroup(keyword) {
                 $.ajax({
-                    url: 'server.php',
+                    url: 'http://sample-env.bcz3r45x9e.us-west-2.elasticbeanstalk.com/',
                     data: {'type': 'group', 'q': keyword},
                     type: 'GET',
                     dataType: 'json',
@@ -351,4 +351,3 @@ function setActiveTab(tab) {
 function unActiveTab(tab) {
     $('#'+tab).removeClass('active');
 }
-
